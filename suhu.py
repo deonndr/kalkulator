@@ -1,85 +1,74 @@
-# mengaktifkan fitur pencatatan riwayat
-from utils.history import add_history
+from utils.history import add_history  # import fungsi buat nyimpen riwayat
 
-def classified_temp(celsius):
-    """Fungsi klasifikasi suhu sesuai kriteria Soal 2B"""
-    if celsius <= 0: return "Beku"
-    elif 1 <= celsius <= 15: return "Dingin"
-    elif 16 <= celsius <= 25: return "Normal"
-    elif 26 <= celsius <= 35: return "Panas"
-    else: return "Sangat Panas"
+def classified_temp(celsius):  # fungsi klasifikasi suhu berdasarkan nilainya
+    if celsius <= 0: return "Beku"  # 0 ke bawah = beku
+    elif 1 <= celsius <= 15: return "Dingin"  # 1-15 = dingin
+    elif 16 <= celsius <= 25: return "Normal"  # 16-25 = normal
+    elif 26 <= celsius <= 35: return "Panas"  # 26-35 = panas
+    else: return "Sangat Panas"  # di atas 35 = sangat panas
 
-# Rumus-rumus konversi suhu berdasarkan tabel Soal 2C
-def c_to_f(c): return (c * 9/5) + 32
-def c_to_k(c): return c + 273.15
-def c_to_r(c): return c * 4/5
-def f_to_c(f): return (f - 32) * 5/9
-def k_to_c(k): return k - 273.15
-def r_to_c(r): return r * 5/4
+def c_to_f(c): return (c * 9/5) + 32  # rumus Celsius ke Fahrenheit
+def c_to_k(c): return c + 273.15  # rumus Celsius ke Kelvin
+def c_to_r(c): return c * 4/5  # rumus Celsius ke Reaumur
+def f_to_c(f): return (f - 32) * 5/9  # rumus Fahrenheit ke Celsius
+def k_to_c(k): return k - 273.15  # rumus Kelvin ke Celsius
+def r_to_c(r): return r * 5/4  # rumus Reaumur ke Celsius
 
-def convert_temp(val, from_u, to_u):
-    """Mengonversi nilai suhu antar satuan dengan Celsius sebagai jembatan"""
-    # Langkah 1: Ubah input ke Celsius
-    if from_u == 'C': c = val
-    elif from_u == 'F': c = f_to_c(val)
-    elif from_u == 'K': c = k_to_c(val)
-    elif from_u == 'R': c = r_to_c(val)
+def convert_temp(val, from_u, to_u):  # fungsi konversi antar satuan
+    if from_u == 'C': c = val  # kalau dari Celsius, langsung pakai
+    elif from_u == 'F': c = f_to_c(val)  # kalau dari Fahrenheit, konversi dulu ke Celsius
+    elif from_u == 'K': c = k_to_c(val)  # kalau dari Kelvin, konversi dulu ke Celsius
+    elif from_u == 'R': c = r_to_c(val)  # kalau dari Reaumur, konversi dulu ke Celsius
     
-    # Langkah 2: Dari Celsius ke unit tujuan
-    if to_u == 'C': res = c
-    elif to_u == 'F': res = c_to_f(c)
-    elif to_u == 'K': res = c_to_k(c)
-    elif to_u == 'R': res = c_to_r(c)
+    if to_u == 'C': res = c  # kalau tujuan Celsius, langsung pakai
+    elif to_u == 'F': res = c_to_f(c)  # kalau tujuan Fahrenheit, konversi dari Celsius
+    elif to_u == 'K': res = c_to_k(c)  # kalau tujuan Kelvin, konversi dari Celsius
+    elif to_u == 'R': res = c_to_r(c)  # kalau tujuan Reaumur, konversi dari Celsius
     
-    return res, c # mengembalikan hasil konversi dan nilai celcius untuk klasifikasi
+    return res, c  # return hasil konversi + nilai celsius buat klasifikasi
 
-def display_table():
-    """Menampilkan tabel konversi 0-100 step 10 sesuai Soal 2B"""
-    print("\n=== TABEL KONVERSI SUHU (0°C - 100°C) ===")
-    header = f"{'Celsius':<8} | {'Fahr':<8} | {'Kelv':<8} | {'Reau':<8} | {'Status'}"
-    print(header)
-    print("-" * len(header))
-    for c in range(0, 101, 10):
-        # hitung tiap satuan
-        f, k, r = c_to_f(c), c_to_k(c), c_to_r(c)
-        status = classified_temp(c) # ambil klasifikasi
-        print(f"{c:<8}°C | {f:<8.1f}°F | {k:<8.1f}K | {r:<8.1f}°R | {status}")
+def display_table():  # fungsi nampilin tabel konversi
+    print("\n=== TABEL KONVERSI SUHU (0°C - 100°C) ===")  # judul tabel
+    header = f"{'Celsius':<8} | {'Fahr':<8} | {'Kelv':<8} | {'Reau':<8} | {'Status'}"  # header kolom
+    print(header)  # tampilin header
+    print("-" * len(header))  # garis pemisah sepanjang header
+    for c in range(0, 101, 10):  # loop dari 0 sampai 100, loncat 10
+        f, k, r = c_to_f(c), c_to_k(c), c_to_r(c)  # hitung semua satuan
+        status = classified_temp(c)  # ambil klasifikasi suhu
+        print(f"{c:<8}°C | {f:<8.1f}°F | {k:<8.1f}K | {r:<8.1f}°R | {status}")  # tampilin satu baris
 
-def menu_suhu():
-    """Menu utama kalkulator suhu sesuai Soal 2D"""
-    print("\n=== KALKULATOR SUHU ===")
-    print("1. Konversi Satuan")
-    print("2. Tabel Konversi")
-    print("3. Klasifikasi Suhu")
+def menu_suhu():  # fungsi menu utama kalkulator suhu
+    print("\n=== KALKULATOR SUHU ===")  # judul menu
+    print("1. Konversi Satuan")  # opsi 1
+    print("2. Tabel Konversi")  # opsi 2
+    print("3. Klasifikasi Suhu")  # opsi 3
     
-    choice = input("Pilih: ")
+    choice = input("Pilih: ")  # minta input user
     
-    if choice == '1':
-        # menu konversi dua arah sesuai Soal 2B
-        u = {'1': 'Celsius', '2': 'Fahrenheit', '3': 'Kelvin', '4': 'Reaumur'}
-        print("Pilih: 1.C, 2.F, 3.K, 4.R")
+    if choice == '1':  # kalau pilih konversi
+        u = {'1': 'Celsius', '2': 'Fahrenheit', '3': 'Kelvin', '4': 'Reaumur'}  # mapping angka ke nama satuan
+        print("Pilih: 1.C, 2.F, 3.K, 4.R")  # tampilin pilihan satuan
+        try:  # pakai try buat antisipasi input salah
+            f_idx = input("Dari: ")  # input satuan asal
+            t_idx = input("Ke: ")  # input satuan tujuan
+            val = float(input("Nilai: "))  # input nilai suhu, diubah ke float
+            
+            f_char, t_char = u[f_idx][0], u[t_idx][0]  # ambil huruf pertama, misal 'Celsius' → 'C'
+            res, c_val = convert_temp(val, f_char, t_char)  # konversi suhu
+            status = classified_temp(c_val)  # klasifikasi berdasarkan nilai Celsius-nya
+            
+            print(f"\nHasil: {res:.1f}°{t_char}")  # tampilin hasil konversi
+            print(f"Klasifikasi: {status}")  # tampilin klasifikasi suhu
+            
+            add_history("Suhu", f"{val}{f_char} to {t_char}", f"{res:.1f}{t_char}")  # simpan ke riwayat
+        except Exception as e: print(f"Error: {e}")  # kalau ada error, tampilin pesannya
+
+    elif choice == '2': display_table()  # kalau pilih 2, tampilin tabel
+    elif choice == '3':  # kalau pilih 3, klasifikasi manual
         try:
-            f_idx = input("Dari: ")
-            t_idx = input("Ke: ")
-            val = float(input("Nilai: "))
-            
-            # ambil inisial (C, F, K, R)
-            f_char, t_char = u[f_idx][0], u[t_idx][0]
-            res, c_val = convert_temp(val, f_char, t_char)
-            status = classified_temp(c_val) # klasifikasi otomatis
-            
-            print(f"\nHasil: {res:.1f}°{t_char}")
-            print(f"Klasifikasi: {status}")
-            
-            add_history("Suhu", f"{val}{f_char} to {t_char}", f"{res:.1f}{t_char}")
-        except Exception as e: print(f"Error: {e}")
+            c = float(input("Masukkan suhu Celsius: "))  # minta input suhu
+            print(f"Klasifikasi: {classified_temp(c)}")  # tampilin hasil klasifikasi
+        except: print("Gagal!")  # kalau input bukan angka
 
-    elif choice == '2': display_table()
-    elif choice == '3':
-        try:
-            c = float(input("Masukkan suhu Celsius: "))
-            print(f"Klasifikasi: {classified_temp(c)}")
-        except: print("Gagal!")
-
-if __name__ == "__main__":
-    menu_suhu()
+if __name__ == "__main__":  # kalau file ini dirun langsung
+    menu_suhu()  # panggil menu suhu
