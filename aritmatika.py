@@ -1,163 +1,83 @@
-# mengimport modul math untuk operasi matematika lanjutan seperti akar kuadrat
 import math
+from utils.history import add_history
 
-# =============
-# OPERATOR DASAR
-# =============
-
-def add(a, b):
-    return a + b
-
-def subtract(a, b):
-    return a - b
-
-def multiply(a, b):
-    return a * b
-
-def divide(a, b):
-    if b == 0:
-        raise ZeroDivisionError("Error: pembagian dengan nol tidak diperbolehkan")
+# fungsi-fungsi dasar buat kalkulator
+def tambah(a, b): return a + b
+def kurang(a, b): return a - b
+def kali(a, b): return a * b
+def bagi(a, b):
+    # cek biar ga error bagi nol
+    if b == 0: raise ZeroDivisionError("Gabisa dibagi nol bos!")
     return a / b
 
-def power(a, b):
-    return a**b
+def pangkat(a, b): return a**b
+def modulo(a, b): return a % b
+def akar(a):
+    if a < 0: return "Error: harus positif"
+    return math.sqrt(a)
 
-def modulo(a, b):
-    if b == 0:
-        return "Error: pembagian dengan nol tidak diperbolehkan"
-    else:
-        return a % b
-
-def square_root(a):
-    if a < 0:
-        return "Error: tidak dapat menghitung akar kuadrat dari bilangan negatif"
-    else:
-        return math.sqrt(a)
-
-# =============
-# OPERASI ILMIAH
-# =============
-
-def sine(x):
-    return math.sin(math.radians(x))
-
-def cosine(x):
-    return math.cos(math.radians(x))
-
-def tangent(x):
-    return math.tan(math.radians(x))
-
-def log_base10(x):
-    if x <= 0:
-        raise ValueError("Log is only defined for numbers > 0.")
-    return math.log10(x)
-
-def natural_log(x):
-    if x <= 0:
-        raise ValueError("Natural log is only defined for numbers > 0.")
-    return math.log(x)
-
-# =============
-# OPERASI BERANTAI
-# =============
-
-def evaluate_expression(expression):
+def hitung_ekspresi(teks):
+    # pake eval buat precedence otomatis (kabataku)
     try:
-        return eval(expression)
-    except Exception:
-        return "Invalid expression."
-
-# =============
-# MENU UTAMA ARITMATIKA
-# =============
+        return eval(teks)
+    except:
+        return "Input salah"
 
 def menu_aritmatika():
-    print("=== KALKULATOR ARITMATIKA3 ===")
-    print("1. operasi dasar")
-    print("2. operasi ilmiah")
-    print("3. ekspresi berantai")
-
-    # ambil input user
-    input_menu = input("menu pilihan: ")
-
-        # =============
-        # OPERASI DASAR
-        # =============
-
-    # memvalidasi input user
-    if input_menu == "1":
+    print("\n=== KALKULATOR ARITMATIKA ===")
+    print("1. Operasi Dasar\n2. Operasi Ilmiah\n3. Ekspresi Berantai")
+    
+    pilih = input("Mau pilih nomor berapa? ")
+    
+    if pilih == "1":
         try:
-            a = float(input("masukkan angka pertama: "))
-            operator = input("masukkan operator (+, -, *, /, ^, %, √): ")
-
-            if operator == "√":
-                result = square_root(a)
+            n1 = float(input("Angka pertama: "))
+            ops = input("Pilih operator (+,-,*,/,^,%,sqrt): ")
+            
+            if ops == "sqrt":
+                hasil = akar(n1)
+                print(f"Hasilnya: {hasil}")
+                add_history("Dasar", f"sqrt({n1})", str(hasil))
             else:
-                b = float(input("masukkan angka kedua:"))
-                if operator == "+":
-                    result = add(a, b)
-                elif operator == "-":
-                    result = subtract(a, b)
-                elif operator == "*":
-                    result = multiply(a, b)
-                elif operator == "/":
-                    result = divide(a, b)
-                elif operator == "^":
-                    result = power(a, b)
-                elif operator == "%":
-                    result = modulo(a, b)
-                else:
-                    print("operator tidak valid")
+                n2 = float(input("Angka kedua: "))
+                if ops == "+": hasil = tambah(n1, n2)
+                elif ops == "-": hasil = kurang(n1, n2)
+                elif ops == "*": hasil = kali(n1, n2)
+                elif ops == "/": hasil = bagi(n1, n2)
+                elif ops == "^": hasil = pangkat(n1, n2)
+                elif ops == "%": hasil = modulo(n1, n2)
+                else: 
+                    print("Operator ga dikenal!")
                     return
-            print(f"hasil: {result:g}")
-        except ValueError:
-            print("input tidak valid")
+                print(f"Hasilnya: {hasil}")
+                add_history("Dasar", f"{n1}{ops}{n2}", str(hasil))
+        except ZeroDivisionError as e: print(e)
+        except ValueError: print("Isinya harus angka!")
 
-        # =============
-        # OPERASI ILMIAH
-        # =============
-
-    elif input_menu == "2":
+    elif pilih == "2":
+        # buat menu ilmiah sin/cos/tan dll
+        print("Menu: sin, cos, tan, log, ln")
+        pilih_ilmu = input("Pilih: ").lower()
         try:
-            print("1. sin") 
-            print("2. cos")  
-            print("3. tan")   
-            print("4. log")
-            print("5. ln")
-                
-            scientific_choice = input("Pilih operasi ilmiah (1-5): ")
-            number = float(input("Masukkan angka: "))
-                
-            if scientific_choice == "1":
-                result = sine(number)
-            elif scientific_choice == "2":
-                result = cosine(number)
-            elif scientific_choice == "3":
-                result = tangent(number)
-            elif scientific_choice == "4":
-                result = log_base10(number)
-            elif scientific_choice == "5":
-                result = natural_log(number)
-            else:
-                print("Pilihan tidak valid.")
-                return
+            bil = float(input("Angka: "))
+            if pilih_ilmu == "sin": r = math.sin(math.radians(bil))
+            elif pilih_ilmu == "cos": r = math.cos(math.radians(bil))
+            elif pilih_ilmu == "tan": r = math.tan(math.radians(bil))
+            elif pilih_ilmu == "log": r = math.log10(bil)
+            elif pilih_ilmu == "ln": r = math.log(bil)
+            else: return
+            print(f"Hasilnya: {r}")
+            add_history("Ilmiah", f"{pilih_ilmu}({bil})", str(r))
+        except: print("Error hitung!")
 
-            print("Hasil:", result)
-        except Exception as error:
-            print("Error:", error)
-            
-            
-        # =============
-        # OPERASI BERANTAI
-        # =============
-        
-    elif input_menu == "3":
-        expression = input("masukkan input bruntun anda: ")
-        result = evaluate_expression(expression)
-        print(f"hasil: {result}")
-        
-    else:
-        print("pilihan menu tidak valid")
+    elif pilih == "3":
+        # bagian ekspresi berantai (soal 1C)
+        ekspresi = input("Masukkan ekspresi (misal 5+3*2): ")
+        hasil = hitung_ekspresi(ekspresi)
+        print(f"Hasil: {hasil}")
+        # tampilin langkah simpel sesuai contoh
+        print(f"Langkah: {ekspresi} = {hasil}")
+        add_history("Berantai", ekspresi, str(hasil))
 
 if __name__ == "__main__":
     menu_aritmatika()
